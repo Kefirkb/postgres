@@ -143,8 +143,9 @@ RUN mkdir -p "$PGDATA" && chown -R postgres:postgres "$PGDATA" && chmod 777 "$PG
 VOLUME /var/lib/postgresql/data
 
 COPY docker-entrypoint.sh /usr/local/bin/
+RUN sed -i 's/\r//' /usr/local/bin/docker-entrypoint.sh # dirty hack - remove all \r
 RUN ln -s usr/local/bin/docker-entrypoint.sh / # backwards compat
-ENTRYPOINT ["docker-entrypoint.sh"]
+ENTRYPOINT ["/bin/bash","docker-entrypoint.sh"]
 
 EXPOSE 5432
 CMD ["postgres"]
